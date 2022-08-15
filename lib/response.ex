@@ -1,17 +1,18 @@
 defmodule Iris.Response do
   defmacro __using__(_module) do
     quote do
-      def return(nil) do
-        {:error, :not_found}
+      def return({:error, error}) do
+        {:error, error}
       end
 
-      def return(res), do: {:ok, res}
+      def return({:ok, res}), do: {:ok, res}
 
-      def return!(nil) do
-        raise Iris.Error.NotFoundError
+
+      def return!({:error, error}) do
+        raise error
       end
 
-      def return!(res), do: res
+      def return!({:ok, res}), do: res
     end
   end
 end
