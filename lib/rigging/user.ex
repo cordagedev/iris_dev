@@ -2,6 +2,7 @@ defmodule Iris.Rigging.User do
   use Iris.Response
   use Iris.Request
 
+  # acá hay que replicar la estructura del esquema
   defstruct name: nil
 
   @url "/api/v1/users/"
@@ -18,7 +19,7 @@ defmodule Iris.Rigging.User do
 
   defp to_user({:error, error}), do: {:error, error}
   defp to_user({:ok, body}) do
-    # %__MODULE__{} crear el struct %User{} usando response
+    # {:ok, %__MODULE__{}} crear el struct %User{} usando response
     {:ok, body}
   end
 end
