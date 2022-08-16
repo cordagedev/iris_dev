@@ -17,6 +17,7 @@ defmodule Iris.Rigging.OrganizationalUnit do
   import Iris.Request
 
   @enforce_keys ~w[
+    id
     name
     code
     description

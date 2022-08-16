@@ -22,6 +22,7 @@ defmodule Iris.Rigging.User do
   import Iris.Request
 
   @enforce_keys ~w[
+    id
     first_name
     middle_name
     last_name
