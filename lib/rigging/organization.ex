@@ -2,14 +2,12 @@ defmodule Iris.Rigging.Organization do
   use Iris.Response
   use Iris.Request
 
-  import Iris.Tools
-
   @url "/api/v1/organizations/"
 
   @spec get(binary, binary) :: {:ok, map()} | {:error, String.t()}
   def get(user_token, id) when is_binary(id) do
     request(:rigging, @url <> id, user_token)
-    |> parse(:organization)
+    |> parse
     |> return
   end
 
@@ -17,6 +15,10 @@ defmodule Iris.Rigging.Organization do
   def get!(user_token, id) when is_binary(id) do
     return! get(user_token, id)
   end
+
+  def parse({:error, error}), do: {:error, error}
+
+  def parse({:ok, body}), do: {:ok, struct(__MODULE__, body)}
 
   @enforce_keys [
     :name,
