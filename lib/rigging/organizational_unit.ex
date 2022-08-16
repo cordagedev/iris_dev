@@ -1,61 +1,54 @@
-defmodule Iris.Rigging.User do
+defmodule Iris.Rigging.OrganizationalUnit do
   @moduledoc """
-  This module represents a *User* in Cordage.
+  This module represents a *OrganizationalUnit* in Cordage.
 
   Attributes:
     * id
-    * first_name
-    * middle_name
-    * last_name
-    * email
-    * timezone
-    * auth0_id
-    * type
-    * status
-    * language
+    * name
+    * code
+    * description
+    * level
+    * parent_id
     * organization_id
-    * organizational_unit_id
-    * job_title_id
+    * responsible_id
   """
 
   import Iris.Response
   import Iris.Request
 
   @enforce_keys ~w[
-    first_name
-    middle_name
-    last_name
-    email
-    timezone
-    auth0_id
-    type
-    status
-    language
+    name
+    code
+    description
+    level
+    parent_id
     organization_id
-    organizational_unit_id
-    job_title_id
+    responsible_id
   ]a
 
   defstruct @enforce_keys
 
-  @url "/api/v1/users/"
+  @url "/api/v1/organizational_units/"
 
   @doc """
-  Gets a *User* from *Rigging*.
+  Gets a *Organizational Unit* from *Rigging*.
   Expects the token of the user making the request, along with
   the ID of the user they are looking for.
 
   > Token must *not* contain the "Bearer" prefix.
-  > Also, the authorization logic will be enforce
+  > Also, the authorization login will be enforce
   > by *Rigging*.
 
-  ## Examples
+  Examples
 
-       iex> User.get("my valid token", "my id")
-       iex> {:ok, %Iris.Rigging.User{}}
+      iex> OrganizationalUnit.get("my valid token", "my id")
+      iex> {:ok, %Iris.Rigging.OrganizationalUnit{}}
+      
+      iex> OrganizationalUnit.get("my valid token", "invalid id")
+      iex> {:error, %Iris.Error.NotFoundError}
 
-       iex> User.get("my valid token", "invalid id")
-       iex> {:error, %Iris.Error.NotFoundError{}}
+      iex> OrganizationalUnit.get("my invalid token", "my id")
+      iex> {:error, %Iris.Error.UnauthorizedError}
   """
   @spec get(user_token :: String.t(), id :: String.t()) ::
           {:ok, %__MODULE__{}}
@@ -68,7 +61,7 @@ defmodule Iris.Rigging.User do
   end
 
   @doc """
-  Gets a *User* from *Rigging*.
+  Gets a *Organizational Unit* from *Rigging*.
   Expects the token of the user making the request, along with
   the ID of the user they are looking for.
 
@@ -80,24 +73,23 @@ defmodule Iris.Rigging.User do
 
   Raises a `Iris.Error.UnauthorizedError` if *Rigging* sends an "unauthorized" response.
 
-  ## Examples
+  Examples
 
-      iex> User.get!("my valid token", "my id")
-      iex> %Iris.Rigging.User{}
+      iex> OrganizationalUnit.get!("my valid token", "my id")
+      iex> %Iris.Rigging.OrganizationalUnit{}
       
-      iex> User.get!("my valid token", "invalid id")
-      ** (Iris.Error.NotFoundError)
+      iex> OrganizationalUnit.get!("my valid token", "invalid id")
+      iex> ** Iris.Error.NotFoundError
 
-      iex> User.get!("my invalid token", "my id")
-      ** (Iris.Error.UnauthorizedError)
+      iex> OrganizationalUnit.get!("my invalid token", "my id")
+      iex> ** Iris.Error.UnauthorizedError
   """
   @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
   def get!(user_token, id) when is_binary(id) do
-    return!(get(user_token, id))
+    return! get(user_token, id)
   end
 
   defp parse({:error, error}), do: {:error, error}
-
   defp parse({:ok, body}) do
     {:ok, struct(__MODULE__, body)}
   end

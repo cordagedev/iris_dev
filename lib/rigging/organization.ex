@@ -1,6 +1,6 @@
 defmodule Iris.Rigging.Organization do
-  use Iris.Response
-  use Iris.Request
+  import Iris.Response
+  import Iris.Request
 
   @url "/api/v1/organizations/"
 
