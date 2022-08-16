@@ -22,7 +22,8 @@ defmodule Iris.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.8"},
-      {:jason, "~> 1.3"}
+      {:jason, "~> 1.3"},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 end
