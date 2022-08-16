@@ -1,16 +1,15 @@
 defmodule Iris.Rigging.OrganizationalUnit do
   @moduledoc """
-  This module represents a *_OrganizationalUnit_* in Cordage.
+  This module represents a *OrganizationalUnit* in Cordage.
 
-  %OrganizationalUnit{
-    name
-    code
-    description
-    level
-    parent_id
-    organization_id
-    responsible_id
-  }
+  Attributes:
+    * name
+    * code
+    * description
+    * level
+    * parent_id
+    * organization_id
+    * responsible_id
   """
 
   import Iris.Response
@@ -31,25 +30,24 @@ defmodule Iris.Rigging.OrganizationalUnit do
   @url "/api/v1/organizational_units/"
 
   @doc """
-  Gets a *_Organizational Unit_* from *Rigging*.
+  Gets a *Organizational Unit* from *Rigging*.
   Expects the token of the user making the request, along with
   the ID of the user they are looking for.
-  *Note*: Token must *not* contain the "Bearer" prefix.
-          Also, the authorization login will be enforce
-          by *Rigging*.
 
-  Raises a `Iris.Error.NotFoundError` if no record is matched.
-  Raises a `Iris.Error.UnauthorizedError` if *Rigging* sends an "unauthorized" response.
+  > Token must *not* contain the "Bearer" prefix.
+  > Also, the authorization login will be enforce
+  > by *Rigging*.
 
-  Examples:
-      iex> OrganizationalUnit.get!("my valid token", "my id")
-      iex> %OrganizationalUnit{}
+  Examples
+
+      iex> OrganizationalUnit.get("my valid token", "my id")
+      iex> {:ok, %Iris.Rigging.OrganizationalUnit{}}
       
-      iex> OrganizationalUnit.get!("my valid token", "invalid id")
-      iex> ** Iris.Error.NotFoundError
+      iex> OrganizationalUnit.get("my valid token", "invalid id")
+      iex> {:error, %Iris.Error.NotFoundError}
 
-      iex> OrganizationalUnit.get!("my invalid token", "my id")
-      iex> ** Iris.Error.UnauthorizedError
+      iex> OrganizationalUnit.get("my invalid token", "my id")
+      iex> {:error, %Iris.Error.UnauthorizedError}
   """
   @spec get(user_token :: String.t(), id :: String.t()) ::
           {:ok, %__MODULE__{}}
@@ -62,19 +60,22 @@ defmodule Iris.Rigging.OrganizationalUnit do
   end
 
   @doc """
-  Gets a *_Organizational Unit_* from *Rigging*.
+  Gets a *Organizational Unit* from *Rigging*.
   Expects the token of the user making the request, along with
   the ID of the user they are looking for.
-  *Note*: Token must *not* contain the "Bearer" prefix.
-          Also, the authorization login will be enforce
-          by *Rigging*.
+
+  > Token must *not* contain the "Bearer" prefix.
+  > Also, the authorization login will be enforce
+  > by *Rigging*.
 
   Raises a `Iris.Error.NotFoundError` if no record is matched.
+
   Raises a `Iris.Error.UnauthorizedError` if *Rigging* sends an "unauthorized" response.
 
-  Examples:
+  Examples
+
       iex> OrganizationalUnit.get!("my valid token", "my id")
-      iex> %OrganizationalUnit{}
+      iex> %Iris.Rigging.OrganizationalUnit{}
       
       iex> OrganizationalUnit.get!("my valid token", "invalid id")
       iex> ** Iris.Error.NotFoundError

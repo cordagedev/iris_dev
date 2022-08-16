@@ -1,21 +1,20 @@
 defmodule Iris.Rigging.User do
   @moduledoc """
-  This module represents a *_User_* in Cordage.
+  This module represents a *User* in Cordage.
 
-  %User{
-    first_name
-    middle_name
-    last_name
-    email
-    timezone
-    auth0_id
-    type
-    status
-    language
-    organization_id
-    organizational_unit_id
-    job_title_id
-  }
+  Attributes:
+    * first_name
+    * middle_name
+    * last_name
+    * email
+    * timezone
+    * auth0_id
+    * type
+    * status
+    * language
+    * organization_id
+    * organizational_unit_id
+    * job_title_id
   """
 
   import Iris.Response
@@ -41,16 +40,18 @@ defmodule Iris.Rigging.User do
   @url "/api/v1/users/"
 
   @doc """
-  Gets a *_User_* from *Rigging*.
+  Gets a *User* from *Rigging*.
   Expects the token of the user making the request, along with
   the ID of the user they are looking for.
-  *Note*: Token must *not* contain the "Bearer" prefix.
-          Also, the authorization logic will be enforce
-          by *Rigging*.
 
-  Examples:
+  > Token must *not* contain the "Bearer" prefix.
+  > Also, the authorization logic will be enforce
+  > by *Rigging*.
+
+  ## Examples
+
        iex> User.get("my valid token", "my id")
-       iex> {:ok, %User{}}
+       iex> {:ok, %Iris.Rigging.User{}}
 
        iex> User.get("my valid token", "invalid id")
        iex> {:error, %Iris.Error.NotFoundError{}}
@@ -66,25 +67,28 @@ defmodule Iris.Rigging.User do
   end
 
   @doc """
-  Gets a *_User_* from *Rigging*.
+  Gets a *User* from *Rigging*.
   Expects the token of the user making the request, along with
   the ID of the user they are looking for.
-  *Note*: Token must *not* contain the "Bearer" prefix.
-          Also, the authorization login will be enforce
-          by *Rigging*.
+
+  > Token must *not* contain the "Bearer" prefix.
+  > Also, the authorization login will be enforce
+  > by *Rigging*.
 
   Raises a `Iris.Error.NotFoundError` if no record is matched.
+
   Raises a `Iris.Error.UnauthorizedError` if *Rigging* sends an "unauthorized" response.
 
-  Examples:
+  ## Examples
+
       iex> User.get!("my valid token", "my id")
-      iex> %User{}
+      iex> %Iris.Rigging.User{}
       
       iex> User.get!("my valid token", "invalid id")
-      iex> ** Iris.Error.NotFoundError
+      ** (Iris.Error.NotFoundError)
 
       iex> User.get!("my invalid token", "my id")
-      iex> ** Iris.Error.UnauthorizedError
+      ** (Iris.Error.UnauthorizedError)
   """
   @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
   def get!(user_token, id) when is_binary(id) do
