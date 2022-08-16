@@ -8,12 +8,12 @@ defmodule Iris.Request do
       end
 
       defp make_request(url, token) do
-        case HTTPoison.get(url, %{"Authorization" => token}) do
+        case HTTPoison.get(url, %{"Authorization" => "Bearer " <> token}) do
           {:error, _error} ->
             {:error, %Iris.Error.ServerError{}}
 
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, Jason.decode!(body)}
+            {:ok, Jason.decode!(body, keys: :atoms)}
 
           {:ok, %HTTPoison.Response{status_code: 404}} ->
             {:error, %Iris.Error.NotFoundError{}}

@@ -13,6 +13,7 @@ defmodule Iris.Rigging.User do
     return user
   end
 
+  @spec get!(binary, binary) :: any
   def get!(user_token, id) when is_binary(id) do
     return! get(id, user_token) # podríamos reutilizar la otra función
   end
