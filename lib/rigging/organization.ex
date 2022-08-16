@@ -4,7 +4,7 @@ defmodule Iris.Rigging.Organization do
 
   import Iris.Tools
 
-  @url "/api/v1/organization/"
+  @url "/api/v1/organizations/"
 
   @spec get(binary, binary) :: {:ok, map()} | {:error, String.t()}
   def get(user_token, id) when is_binary(id) do
