@@ -1,51 +1,51 @@
-defmodule UserTest do
+defmodule Iris.Rigging.OrganizationTest do
   use ExUnit.Case, async: false
 
   import Mock
 
-  alias Iris.Rigging.User
+  alias Iris.Rigging.Organization
 
-  @user_id "eff17a61-9e42-4fa4-8a9a-48f7b5227759"
+  @organization_id "eff17a61-9e42-4fa4-8a9a-48f7b5227759"
   @token "test"
 
   describe "get/2" do
-    test_with_mock "returns a user",
+    test_with_mock "returns a organization",
                    HTTPoison,
                    get: &success/2 do
-      assert {:ok, %User{}} = User.get(@token, @user_id)
+      assert {:ok, %Organization{}} = Organization.get(@token, @organization_id)
     end
 
     test_with_mock "returns {:error, %UnauthorizedError{}} if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
-      assert {:error, %Iris.Error.UnauthorizedError{}} = User.get(@token, @user_id)
+      assert {:error, %Iris.Error.UnauthorizedError{}} = Organization.get(@token, @organization_id)
     end
 
     test_with_mock "returns {:error, %NotFoundError{}} if no id matches",
                    HTTPoison,
                    get: &not_found/2 do
-      assert {:error, %Iris.Error.NotFoundError{}} = User.get(@token, @user_id)
+      assert {:error, %Iris.Error.NotFoundError{}} = Organization.get(@token, @organization_id)
     end
 
     test_with_mock "returns {:error, %ServerError{}} if rigging doesn't respond",
                    HTTPoison,
                    get: &server_error/2 do
-      assert {:error, %Iris.Error.ServerError{}} = User.get(@token, @user_id)
+      assert {:error, %Iris.Error.ServerError{}} = Organization.get(@token, @organization_id)
     end
   end
 
   describe "get!/2" do
-    test_with_mock "returns a user",
+    test_with_mock "returns a organization",
                    HTTPoison,
                    get: &success/2 do
-      assert %User{} = User.get!(@token, @user_id)
+      assert %Organization{} = Organization.get!(@token, @organization_id)
     end
 
     test_with_mock "raises UnauthorizedError if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert_raise Iris.Error.UnauthorizedError, fn ->
-        User.get!(@token, @user_id)
+        Organization.get!(@token, @organization_id)
       end
     end
 
@@ -53,7 +53,7 @@ defmodule UserTest do
                    HTTPoison,
                    get: &not_found/2 do
       assert_raise Iris.Error.NotFoundError, fn ->
-        User.get!(@token, @user_id)
+        Organization.get!(@token, @organization_id)
       end
     end
 
@@ -61,7 +61,7 @@ defmodule UserTest do
                    HTTPoison,
                    get: &server_error/2 do
       assert_raise Iris.Error.ServerError, fn ->
-        User.get!(@token, @user_id)
+        Organization.get!(@token, @organization_id)
       end
     end
   end
@@ -72,18 +72,12 @@ defmodule UserTest do
        status_code: 200,
        body: """
        {
-         "id": "#{@user_id}",
-         "first_name": "Alice",
-         "last_name": "Doe",
-         "email": "alice@cordage.io",
-         "timezone": "Americas/Mexico_City",
+         "id": "#{@organization_id}",
+         "name": "#{@organization_id}",
+         "display_name": "iCorp",
          "auth0_id": "auth0|62dad28ddbfb90d69d29b4ae",
-         "type": "Basic",
-         "status": "Invited",
-         "language": "EN",
-         "organization_id": "eff17a61-9e42-4fa4-8a9a-48f7b5227759",
-         "organizational_unit_id": "eff17a61-9e42-4fa4-8a9a-48f7b5227759",
-         "job_title_id": "eff17a61-9e42-4fa4-8a9a-48f7b5227759"
+         "responsible_id": "eff17a61-9e42-4fa4-8a9a-48f7b5227759",
+         "main_business_unit_id": "eff17a61-9e42-4fa4-8a9a-48f7b5227759"
        }
        """
      }}
