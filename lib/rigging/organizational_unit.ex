@@ -1,4 +1,18 @@
 defmodule Iris.Rigging.OrganizationalUnit do
+  @moduledoc """
+  This module represents a *_OrganizationalUnit_* in Cordage.
+
+  %OrganizationalUnit{
+    name
+    code
+    description
+    level
+    parent_id
+    organization_id
+    responsible_id
+  }
+  """
+
   import Iris.Response
   import Iris.Request
 
@@ -16,13 +30,59 @@ defmodule Iris.Rigging.OrganizationalUnit do
 
   @url "/api/v1/organizational_units/"
 
+  @doc """
+  Gets a *_Organizational Unit_* from *Rigging*.
+  Expects the token of the user making the request, along with
+  the ID of the user they are looking for.
+  *Note*: Token must *not* contain the "Bearer" prefix.
+          Also, the authorization login will be enforce
+          by *Rigging*.
+
+  Raises a `Iris.Error.NotFoundError` if no record is matched.
+  Raises a `Iris.Error.UnauthorizedError` if *Rigging* sends an "unauthorized" response.
+
+  Examples:
+      iex> OrganizationalUnit.get!("my valid token", "my id")
+      iex> %OrganizationalUnit{}
+      
+      iex> OrganizationalUnit.get!("my valid token", "invalid id")
+      iex> ** Iris.Error.NotFoundError
+
+      iex> OrganizationalUnit.get!("my invalid token", "my id")
+      iex> ** Iris.Error.UnauthorizedError
+  """
+  @spec get(user_token :: String.t(), id :: String.t()) ::
+          {:ok, %__MODULE__{}}
+          | {:error, %Iris.Error.NotFoundError{}}
+          | {:error, %Iris.Error.UnauthorizedError{}}
   def get(user_token, id) when is_binary(id) do
     request(:rigging, @url <> id, user_token)
     |> parse()
     |> return()
   end
 
-  @spec get!(binary, binary) :: any
+  @doc """
+  Gets a *_Organizational Unit_* from *Rigging*.
+  Expects the token of the user making the request, along with
+  the ID of the user they are looking for.
+  *Note*: Token must *not* contain the "Bearer" prefix.
+          Also, the authorization login will be enforce
+          by *Rigging*.
+
+  Raises a `Iris.Error.NotFoundError` if no record is matched.
+  Raises a `Iris.Error.UnauthorizedError` if *Rigging* sends an "unauthorized" response.
+
+  Examples:
+      iex> OrganizationalUnit.get!("my valid token", "my id")
+      iex> %OrganizationalUnit{}
+      
+      iex> OrganizationalUnit.get!("my valid token", "invalid id")
+      iex> ** Iris.Error.NotFoundError
+
+      iex> OrganizationalUnit.get!("my invalid token", "my id")
+      iex> ** Iris.Error.UnauthorizedError
+  """
+  @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
   def get!(user_token, id) when is_binary(id) do
     return! get(user_token, id)
   end
