@@ -53,7 +53,9 @@ defmodule Iris.Rigging.BusinessUnit do
       iex> BusinessUnit.get("my invalid token", "my id")
       iex> {:error, %Iris.Error.UnauthorizedError}
   """
-  @spec get(binary, binary) :: {:ok, map()} | {:error, String.t()}
+  @spec get(user_token :: String.t(), id :: String.t()) :: {:ok, %__MODULE__{}}
+  | {:error, %Iris.Error.NotFoundError{}}
+  | {:error, %Iris.Error.UnauthorizedError{}}
   def get(user_token, id) when is_binary(id) do
     request(:rigging, @url <> id, user_token)
     |> parse
@@ -63,7 +65,7 @@ defmodule Iris.Rigging.BusinessUnit do
   @doc """
   Gets a *Business Unit* from *Rigging*.
   Expects the token of the user making the request, along with
-  the ID of the user they are looking for.
+  the ID of the business unit they are looking for.
 
   > Token must *not* contain the "Bearer" prefix.
   > Also, the authorization login will be enforce
@@ -84,7 +86,7 @@ defmodule Iris.Rigging.BusinessUnit do
       iex> BusinessUnit.get!("my invalid token", "my id")
       iex> ** Iris.Error.UnauthorizedError
   """
-  @spec get!(binary, binary) :: any
+  @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
   def get!(user_token, id) when is_binary(id) do
     return! get(user_token, id)
   end
