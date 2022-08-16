@@ -1,25 +1,20 @@
-defmodule Iris.Rigging.User do
+defmodule Iris.Rigging.OrganizationalUnit do
   import Iris.Response
   import Iris.Request
 
   @enforce_keys ~w[
-    first_name
-    middle_name
-    last_name
-    email
-    timezone
-    auth0_id
-    type
-    status
-    language
+    name
+    code
+    description
+    level
+    parent_id
     organization_id
-    organizational_unit_id
-    job_title_id
+    responsible_id
   ]a
 
   defstruct @enforce_keys
 
-  @url "/api/v1/users/"
+  @url "/api/v1/organizational_units/"
 
   def get(user_token, id) when is_binary(id) do
     request(:rigging, @url <> id, user_token)

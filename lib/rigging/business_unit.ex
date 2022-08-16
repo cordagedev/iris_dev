@@ -1,6 +1,6 @@
 defmodule Iris.Rigging.BusinessUnit do
-  use Iris.Response
-  use Iris.Request
+  import Iris.Response
+  import Iris.Request
 
   @url "/api/v1/business_units/"
 
