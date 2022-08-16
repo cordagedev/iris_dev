@@ -1,5 +1,5 @@
 defmodule Iris.Tools do
-  alias Iris.Rigging.Structs.{Organization, BusinessUnit}
+  alias Iris.Rigging.{Organization, BusinessUnit}
 
   def parse({:error, error}, _), do: {:error, error}
 

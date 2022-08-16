@@ -17,4 +17,23 @@ defmodule Iris.Rigging.Organization do
   def get!(user_token, id) when is_binary(id) do
     return! get(user_token, id)
   end
+
+  @enforce_keys [
+    :name,
+    :display_name,
+    :auth0_id,
+    :responsible_id,
+    :main_business_unit_id
+  ]
+
+  defstruct [
+    :name,
+    :display_name,
+    :auth0_id,
+    :responsible_id,
+    :main_business_unit_id,
+    :business_units,
+    :organizational_units,
+    :general_units
+  ]
 end
