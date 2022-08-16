@@ -3,6 +3,7 @@ defmodule Iris.Rigging.User do
   This module represents a *User* in Cordage.
 
   Attributes:
+    * id
     * first_name
     * middle_name
     * last_name

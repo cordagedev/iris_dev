@@ -3,6 +3,7 @@ defmodule Iris.Rigging.OrganizationalUnit do
   This module represents a *OrganizationalUnit* in Cordage.
 
   Attributes:
+    * id
     * name
     * code
     * description
