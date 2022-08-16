@@ -84,6 +84,5 @@ defmodule Iris.Rigging.Organization do
   end
 
   def parse({:error, error}), do: {:error, error}
-
   def parse({:ok, body}), do: {:ok, struct(__MODULE__, body)}
 end
