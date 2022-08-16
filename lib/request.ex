@@ -1,10 +1,10 @@
 defmodule Iris.Request do
   defmacro __using__(_module) do
     quote do
-      @url_rigging System.get_env("RIGGING_URL")
+      @rigging_url System.get_env("RIGGING_URL")
 
       def request(:rigging, url, token) do
-        make_request("#{@url_rigging}#{url}", token)
+        make_request("#{@rigging_url}#{url}", token)
       end
 
       defp make_request(url, token) do
