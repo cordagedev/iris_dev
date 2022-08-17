@@ -1,9 +1,6 @@
 defmodule Iris.Request do
-  @rigging_url Application.get_env(:iris, :rigging_url)
-
-  def request(:rigging, url, token) do
-    make_request("#{@rigging_url}#{url}", token)
-  end
+  def request(:rigging, url, token), do:
+    make_request("#{rigging_url()}#{url}", token)
 
   defp make_request(url, token) do
     case HTTPoison.get(url, %{"Authorization" => "Bearer " <> token}) do
@@ -23,4 +20,6 @@ defmodule Iris.Request do
         {:error, %Iris.Error.BadRequestError{}}
     end
   end
+
+  defp rigging_url(), do: Application.get_env(:iris, :rigging_url)
 end
