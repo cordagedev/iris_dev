@@ -1,8 +1,6 @@
 defmodule Iris.Request do
-  @rigging_url System.get_env("RIGGING_URL")
-
   def request(:rigging, url, token) do
-    make_request("#{System.get_env("RIGGING_URL")}#{url}" |> IO.inspect(), token)
+    make_request("#{System.get_env("RIGGING_URL")}#{url}", token)
   end
 
   defp make_request(url, token) do
