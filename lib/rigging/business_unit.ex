@@ -103,15 +103,15 @@ defmodule Iris.Rigging.BusinessUnit do
 
   Examples
 
-      iex> BusinessUnit.foreign_business_units_keys("my valid token", ["my id"])
+      iex> BusinessUnit.foreign_keys("my valid token", ["my id"])
       iex> [%Iris.Rigging.BusinessUnit{}]
 
-      iex> BusinessUnit.foreign_business_units_keys("my valid token", "[not_existing_id]")
+      iex> BusinessUnit.foreign_keys("my valid token", "[not_existing_id]")
       iex> :not_found
   """
-  @spec foreign_business_units_keys(user_token :: String.t(), ids :: [String.t()]) ::
+  @spec foreign_keys(user_token :: String.t(), ids :: [String.t()]) ::
           [ %__MODULE__{}] | :not_found
-  def foreign_business_units_keys(user_token, ids) when is_list(ids) do
+  def foreign_keys(user_token, ids) when is_list(ids) do
     Enum.reduce_while(ids, [], fn id, acc ->
       business_unit =
         user_token
@@ -139,18 +139,18 @@ defmodule Iris.Rigging.BusinessUnit do
 
   Examples
 
-      iex> BusinessUnit.foreign_business_units_keys!("my valid token", ["my id"])
+      iex> BusinessUnit.foreign_keys!("my valid token", ["my id"])
       iex> [%Iris.Rigging.BusinessUnit{}]
 
-      iex> BusinessUnit.foreign_business_units_keys!("my valid token", "[not_existing_id]")
+      iex> BusinessUnit.foreign_keys!("my valid token", "[not_existing_id]")
       iex> ** Iris.Error.NotFoundError
 
-      iex> BusinessUnit.foreign_business_units_keys!("my invalid token", ["my id"])
+      iex> BusinessUnit.foreign_keys!("my invalid token", ["my id"])
       iex> ** Iris.Error.UnauthorizedError
   """
-  @spec foreign_business_units_keys!(user_token :: String.t(), ids :: [String.t()]) ::
+  @spec foreign_keys!(user_token :: String.t(), ids :: [String.t()]) ::
          [ %__MODULE__{}]
-  def foreign_business_units_keys!(user_token, ids) when is_list(ids) do
+  def foreign_keys!(user_token, ids) when is_list(ids) do
     Enum.reduce(ids, [], fn id, acc ->
       business_unit = get!(user_token, id)
       acc ++ [business_unit]
