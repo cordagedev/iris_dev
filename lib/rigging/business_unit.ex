@@ -53,9 +53,10 @@ defmodule Iris.Rigging.BusinessUnit do
       iex> BusinessUnit.get("my invalid token", "my id")
       iex> {:error, %Iris.Error.UnauthorizedError}
   """
-  @spec get(user_token :: String.t(), id :: String.t()) :: {:ok, %__MODULE__{}}
-  | {:error, %Iris.Error.NotFoundError{}}
-  | {:error, %Iris.Error.UnauthorizedError{}}
+  @spec get(user_token :: String.t(), id :: String.t()) ::
+          {:ok, %__MODULE__{}}
+          | {:error, %Iris.Error.NotFoundError{}}
+          | {:error, %Iris.Error.UnauthorizedError{}}
   def get(user_token, id) when is_binary(id) do
     request(:rigging, @url <> id, user_token)
     |> parse
@@ -88,9 +89,43 @@ defmodule Iris.Rigging.BusinessUnit do
   """
   @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
   def get!(user_token, id) when is_binary(id) do
-    return! get(user_token, id)
+    return!(get(user_token, id))
   end
 
-  def parse({:error, error}), do: {:error, error}
-  def parse({:ok, body}), do: {:ok, struct(__MODULE__, body)}
+  @doc """
+  Validates if a list of *Business Units* from *Rigging* exist.
+  Expects the token of the user making the request, along with
+  the ID's of the business units they are validating.
+
+  > Token must *not* contain the "Bearer" prefix.
+  > Also, the authorization login will be enforce
+  > by *Rigging*.
+
+  Examples
+
+      iex> BusinessUnit.foreign_business_units_keys("my valid token", ["my id"])
+      iex> :ok
+
+      iex> BusinessUnit.foreign_business_units_keys("my valid token", "[not_existing_id]")
+      iex> :not_found
+  """
+  @spec foreign_business_units_keys(user_token :: String.t(), ids :: [String.t()]) ::
+          :ok | :not_found
+  def foreign_business_units_keys(user_token, ids) when is_list(ids) do
+    Enum.reduce_while(ids, :ok, fn id, acc ->
+      business_unit = get(user_token, id)
+
+      if :error != foreign_errors(business_unit),
+        do: {:cont, acc},
+        else: {:halt, :not_found}
+    end)
+  end
+
+  # --- Private ----------------------------------------------------------------
+
+  defp parse({:error, error}), do: {:error, error}
+  defp parse({:ok, body}), do: {:ok, struct(__MODULE__, body)}
+
+  defp foreign_errors({:error, _}), do: :error
+  defp foreign_errors(_), do: nil
 end

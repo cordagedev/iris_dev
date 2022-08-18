@@ -87,10 +87,11 @@ defmodule Iris.Rigging.OrganizationalUnit do
   """
   @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
   def get!(user_token, id) when is_binary(id) do
-    return! get(user_token, id)
+    return!(get(user_token, id))
   end
 
   defp parse({:error, error}), do: {:error, error}
+
   defp parse({:ok, body}) do
     {:ok, struct(__MODULE__, body)}
   end
