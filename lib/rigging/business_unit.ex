@@ -119,7 +119,7 @@ defmodule Iris.Rigging.BusinessUnit do
         |> foreign_errors()
 
       if :error != business_unit,
-        do: {:cont, acc ++ [business_unit]},
+        do: {:cont, [business_unit | acc]},
         else: {:halt, :not_found}
     end)
   end
@@ -153,7 +153,7 @@ defmodule Iris.Rigging.BusinessUnit do
   def foreign_keys!(user_token, ids) when is_list(ids) do
     Enum.reduce(ids, [], fn id, acc ->
       business_unit = get!(user_token, id)
-      acc ++ [business_unit]
+      [business_unit | acc]
     end)
   end
 
