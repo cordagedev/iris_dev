@@ -45,9 +45,10 @@ defmodule Iris.Rigging.Organization do
       iex> Organization.get("my invalid token", "my id")
       iex> {:error, %Iris.Error.UnauthorizedError}
   """
-  @spec get(user_token :: String.t(), id :: String.t()) :: {:ok, %__MODULE__{}}
-  | {:error, %Iris.Error.NotFoundError{}}
-  | {:error, %Iris.Error.UnauthorizedError{}}
+  @spec get(user_token :: String.t(), id :: String.t()) ::
+          {:ok, %__MODULE__{}}
+          | {:error, %Iris.Error.NotFoundError{}}
+          | {:error, %Iris.Error.UnauthorizedError{}}
   def get(user_token, id) when is_binary(id) do
     request(:rigging, @url <> id, user_token)
     |> parse
@@ -80,9 +81,9 @@ defmodule Iris.Rigging.Organization do
   """
   @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
   def get!(user_token, id) when is_binary(id) do
-    return! get(user_token, id)
+    return!(get(user_token, id))
   end
 
-  def parse({:error, error}), do: {:error, error}
-  def parse({:ok, body}), do: {:ok, struct(__MODULE__, body)}
+  defp parse({:error, error}), do: {:error, error}
+  defp parse({:ok, body}), do: {:ok, struct(__MODULE__, body)}
 end

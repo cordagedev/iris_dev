@@ -18,7 +18,8 @@ defmodule Iris.Rigging.BusinessUnitTest do
     test_with_mock "returns {:error, %UnauthorizedError{}} if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
-      assert {:error, %Iris.Error.UnauthorizedError{}} = BusinessUnit.get(@token, @business_unit_id)
+      assert {:error, %Iris.Error.UnauthorizedError{}} =
+               BusinessUnit.get(@token, @business_unit_id)
     end
 
     test_with_mock "returns {:error, %NotFoundError{}} if no id matches",
