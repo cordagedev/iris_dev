@@ -87,7 +87,7 @@ defmodule Iris.Rigging.Organization do
   def all(user_token, ids) when is_list(ids) do
     ids
     |> Enum.map(&Task.async(fn -> get(user_token, &1) end))
-    |> Enum.map(&Task.await/1)
+    |> Task.await_many(3000) # timeout
     |> format_list()
     |> return()
   end
