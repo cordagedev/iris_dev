@@ -8,45 +8,45 @@ defmodule Iris.Rigging.BusinessUnitTest do
   @business_unit_id "eff17a61-9e42-4fa4-8a9a-48f7b5227759"
   @token "test"
 
-  describe "foreign_key/2" do
+  describe "get/2" do
     test_with_mock "returns a business unit",
                    HTTPoison,
                    get: &success/2 do
-      assert {:ok, %BusinessUnit{}} = BusinessUnit.foreign_key(@token, @business_unit_id)
+      assert {:ok, %BusinessUnit{}} = BusinessUnit.get(@token, @business_unit_id)
     end
 
     test_with_mock "returns {:error, %UnauthorizedError{}} if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert {:error, %Iris.Error.UnauthorizedError{}} =
-               BusinessUnit.foreign_key(@token, @business_unit_id)
+               BusinessUnit.get(@token, @business_unit_id)
     end
 
     test_with_mock "returns {:error, %NotFoundError{}} if no id matches",
                    HTTPoison,
                    get: &not_found/2 do
-      assert {:error, %Iris.Error.NotFoundError{}} = BusinessUnit.foreign_key(@token, @business_unit_id)
+      assert {:error, %Iris.Error.NotFoundError{}} = BusinessUnit.get(@token, @business_unit_id)
     end
 
     test_with_mock "returns {:error, %ServerError{}} if rigging doesn't respond",
                    HTTPoison,
                    get: &server_error/2 do
-      assert {:error, %Iris.Error.ServerError{}} = BusinessUnit.foreign_key(@token, @business_unit_id)
+      assert {:error, %Iris.Error.ServerError{}} = BusinessUnit.get(@token, @business_unit_id)
     end
   end
 
-  describe "foreign_key!/2" do
+  describe "get!/2" do
     test_with_mock "returns a business unit",
                    HTTPoison,
                    get: &success/2 do
-      assert %BusinessUnit{} = BusinessUnit.foreign_key!(@token, @business_unit_id)
+      assert %BusinessUnit{} = BusinessUnit.get!(@token, @business_unit_id)
     end
 
     test_with_mock "raises UnauthorizedError if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert_raise Iris.Error.UnauthorizedError, fn ->
-        BusinessUnit.foreign_key!(@token, @business_unit_id)
+        BusinessUnit.get!(@token, @business_unit_id)
       end
     end
 
@@ -54,7 +54,7 @@ defmodule Iris.Rigging.BusinessUnitTest do
                    HTTPoison,
                    get: &not_found/2 do
       assert_raise Iris.Error.NotFoundError, fn ->
-        BusinessUnit.foreign_key!(@token, @business_unit_id)
+        BusinessUnit.get!(@token, @business_unit_id)
       end
     end
 
@@ -62,50 +62,50 @@ defmodule Iris.Rigging.BusinessUnitTest do
                    HTTPoison,
                    get: &server_error/2 do
       assert_raise Iris.Error.ServerError, fn ->
-        BusinessUnit.foreign_key!(@token, @business_unit_id)
+        BusinessUnit.get!(@token, @business_unit_id)
       end
     end
   end
 
-  describe "foreign_keys/2" do
+  describe "all/2" do
     test_with_mock "returns a business unit",
                    HTTPoison,
                    get: &success/2 do
-      assert is_list(BusinessUnit.foreign_keys(@token, [@business_unit_id]))
+      assert is_list(BusinessUnit.all(@token, [@business_unit_id]))
     end
 
     test_with_mock "returns {:error, %UnauthorizedError{}} if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
-      assert :not_found =
-               BusinessUnit.foreign_keys(@token, [@business_unit_id])
+      assert [] =
+               BusinessUnit.all(@token, [@business_unit_id])
     end
 
     test_with_mock "returns {:error, %NotFoundError{}} if no id matches",
                    HTTPoison,
                    get: &not_found/2 do
-      assert :not_found = BusinessUnit.foreign_keys(@token, [@business_unit_id])
+      assert [] = BusinessUnit.all(@token, [@business_unit_id])
     end
 
     test_with_mock "returns {:error, %ServerError{}} if rigging doesn't respond",
                    HTTPoison,
                    get: &server_error/2 do
-      assert :not_found = BusinessUnit.foreign_keys(@token, [@business_unit_id])
+      assert [] = BusinessUnit.all(@token, [@business_unit_id])
     end
   end
 
-  describe "foreign_keys!/2" do
+  describe "all!/2" do
     test_with_mock "returns a business unit",
                    HTTPoison,
                    get: &success/2 do
-      assert is_list(BusinessUnit.foreign_keys!(@token, [@business_unit_id]))
+      assert is_list(BusinessUnit.all!(@token, [@business_unit_id]))
     end
 
     test_with_mock "raises UnauthorizedError if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert_raise Iris.Error.UnauthorizedError, fn ->
-        BusinessUnit.foreign_keys!(@token, [@business_unit_id])
+        BusinessUnit.all!(@token, [@business_unit_id])
       end
     end
 
@@ -113,7 +113,7 @@ defmodule Iris.Rigging.BusinessUnitTest do
                    HTTPoison,
                    get: &not_found/2 do
       assert_raise Iris.Error.NotFoundError, fn ->
-        BusinessUnit.foreign_keys!(@token, [@business_unit_id])
+        BusinessUnit.all!(@token, [@business_unit_id])
       end
     end
 
@@ -121,7 +121,7 @@ defmodule Iris.Rigging.BusinessUnitTest do
                    HTTPoison,
                    get: &server_error/2 do
       assert_raise Iris.Error.ServerError, fn ->
-        BusinessUnit.foreign_keys!(@token, [@business_unit_id])
+        BusinessUnit.all!(@token, [@business_unit_id])
       end
     end
   end

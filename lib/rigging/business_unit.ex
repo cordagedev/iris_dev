@@ -34,15 +34,63 @@ defmodule Iris.Rigging.BusinessUnit do
 
   @url "/api/v1/business_units/"
 
-  @spec foreign_key(user_token :: String.t(), id :: String.t()) ::
+  @doc """
+  Gets a *Business Unit* from *Rigging*.
+  Expects the token of the user making the request, along with
+  the ID of the business unit they are looking for.
+
+  > Token must *not* contain the "Bearer" prefix.
+  > Also, the authorization login will be enforce by *Rigging*.
+
+  Examples
+
+      iex> BusinessUnit.get("my valid token", "my id")
+      iex> {:ok, %Iris.Rigging.BusinessUnit{}}
+
+      iex> BusinessUnit.get("my valid token", "invalid id")
+      iex> {:error, %Iris.Error.NotFoundError}
+
+      iex> BusinessUnit.get("my invalid token", "my id")
+      iex> {:error, %Iris.Error.UnauthorizedError}
+  """
+  @spec get(user_token :: String.t(), id :: String.t()) ::
           {:ok, %__MODULE__{}}
           | {:error, %Iris.Error.NotFoundError{}}
           | {:error, %Iris.Error.UnauthorizedError{}}
-  def foreign_key(user_token, id), do: get(user_token, id)
+  def get(user_token, id) when is_binary(id) do
+    request(:rigging, @url <> id, user_token)
+    |> parse
+    |> return
+  end
 
-  @spec foreign_key!(user_token :: String.t(), id :: String.t()) ::
-          %__MODULE__{}
-  def foreign_key!(user_token, id), do: get!(user_token, id)
+  @doc """
+  Gets a *Business Unit* from *Rigging*.
+  Expects the token of the user making the request, along with
+  the ID of the business unit they are looking for.
+
+  > Token must *not* contain the "Bearer" prefix.
+  > Also, the authorization login will be enforce
+  > by *Rigging*.
+
+  Raises a `Iris.Error.NotFoundError` if no record is matched.
+
+  Raises a `Iris.Error.UnauthorizedError` if *Rigging* sends an "unauthorized" response.
+
+  Examples
+
+      iex> BusinessUnit.get!("my valid token", "my id")
+      iex> %Iris.Rigging.BusinessUnit{}
+
+      iex> BusinessUnit.get!("my valid token", "invalid id")
+      iex> ** Iris.Error.NotFoundError
+
+      iex> BusinessUnit.get!("my invalid token", "my id")
+      iex> ** Iris.Error.UnauthorizedError
+  """
+  @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
+  def get!(user_token, id) when is_binary(id) do
+    return!(get(user_token, id))
+  end
 
   @doc """
   Validates if a list of *Business Units* from *Rigging* exist.
@@ -55,24 +103,24 @@ defmodule Iris.Rigging.BusinessUnit do
 
   Examples
 
-      iex> BusinessUnit.foreign_keys("my valid token", ["my id"])
+      iex> BusinessUnit.all("my valid token", ["my id"])
       iex> [%Iris.Rigging.BusinessUnit{}]
 
-      iex> BusinessUnit.foreign_keys("my valid token", "[not_existing_id]")
+      iex> BusinessUnit.all("my valid token", "[not_existing_id]")
       iex> :not_found
   """
-  @spec foreign_keys(user_token :: String.t(), ids :: [String.t()]) ::
-          [ %__MODULE__{}] | :not_found
-  def foreign_keys(user_token, ids) when is_list(ids) do
+  @spec all(user_token :: String.t(), ids :: [String.t()]) ::
+          [ %__MODULE__{}] | []
+  def all(user_token, ids) when is_list(ids) do
     Enum.reduce_while(ids, [], fn id, acc ->
       business_unit =
         user_token
-        |> foreign_key(id)
+        |> get(id)
         |> foreign_errors()
 
       if :error != business_unit,
         do: {:cont, [business_unit | acc]},
-        else: {:halt, :not_found}
+        else: {:halt, []}
     end)
   end
 
@@ -91,83 +139,25 @@ defmodule Iris.Rigging.BusinessUnit do
 
   Examples
 
-      iex> BusinessUnit.foreign_keys!("my valid token", ["my id"])
+      iex> BusinessUnit.all!("my valid token", ["my id"])
       iex> [%Iris.Rigging.BusinessUnit{}]
 
-      iex> BusinessUnit.foreign_keys!("my valid token", "[not_existing_id]")
+      iex> BusinessUnit.all!("my valid token", "[not_existing_id]")
       iex> ** Iris.Error.NotFoundError
 
-      iex> BusinessUnit.foreign_keys!("my invalid token", ["my id"])
+      iex> BusinessUnit.all!("my invalid token", ["my id"])
       iex> ** Iris.Error.UnauthorizedError
   """
-  @spec foreign_keys!(user_token :: String.t(), ids :: [String.t()]) ::
+  @spec all!(user_token :: String.t(), ids :: [String.t()]) ::
          [ %__MODULE__{}]
-  def foreign_keys!(user_token, ids) when is_list(ids) do
+  def all!(user_token, ids) when is_list(ids) do
     Enum.reduce(ids, [], fn id, acc ->
-      business_unit = foreign_key!(user_token, id)
+      business_unit = get!(user_token, id)
       [business_unit | acc]
     end)
   end
 
   # --- Private ----------------------------------------------------------------
-
-  # @doc """
-  # Gets a *Business Unit* from *Rigging*.
-  # Expects the token of the user making the request, along with
-  # the ID of the business unit they are looking for.
-
-  # > Token must *not* contain the "Bearer" prefix.
-  # > Also, the authorization login will be enforce by *Rigging*.
-
-  # Examples
-
-  #     iex> BusinessUnit.get("my valid token", "my id")
-  #     iex> {:ok, %Iris.Rigging.BusinessUnit{}}
-
-  #     iex> BusinessUnit.get("my valid token", "invalid id")
-  #     iex> {:error, %Iris.Error.NotFoundError}
-
-  #     iex> BusinessUnit.get("my invalid token", "my id")
-  #     iex> {:error, %Iris.Error.UnauthorizedError}
-  # """
-  # @spec get(user_token :: String.t(), id :: String.t()) ::
-  #         {:ok, %__MODULE__{}}
-  #         | {:error, %Iris.Error.NotFoundError{}}
-  #         | {:error, %Iris.Error.UnauthorizedError{}}
-  defp get(user_token, id) when is_binary(id) do
-    request(:rigging, @url <> id, user_token)
-    |> parse
-    |> return
-  end
-
-  # @doc """
-  # Gets a *Business Unit* from *Rigging*.
-  # Expects the token of the user making the request, along with
-  # the ID of the business unit they are looking for.
-
-  # > Token must *not* contain the "Bearer" prefix.
-  # > Also, the authorization login will be enforce
-  # > by *Rigging*.
-
-  # Raises a `Iris.Error.NotFoundError` if no record is matched.
-
-  # Raises a `Iris.Error.UnauthorizedError` if *Rigging* sends an "unauthorized" response.
-
-  # Examples
-
-  #     iex> BusinessUnit.get!("my valid token", "my id")
-  #     iex> %Iris.Rigging.BusinessUnit{}
-
-  #     iex> BusinessUnit.get!("my valid token", "invalid id")
-  #     iex> ** Iris.Error.NotFoundError
-
-  #     iex> BusinessUnit.get!("my invalid token", "my id")
-  #     iex> ** Iris.Error.UnauthorizedError
-  # """
-  # @spec get!(user_token :: String.t(), id :: String.t()) :: %__MODULE__{}
-  defp get!(user_token, id) when is_binary(id) do
-    return!(get(user_token, id))
-  end
 
   defp parse({:error, error}), do: {:error, error}
   defp parse({:ok, body}), do: {:ok, struct(__MODULE__, body)}

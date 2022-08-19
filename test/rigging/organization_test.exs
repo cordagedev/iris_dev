@@ -8,45 +8,45 @@ defmodule Iris.Rigging.OrganizationTest do
   @organization_id "eff17a61-9e42-4fa4-8a9a-48f7b5227759"
   @token "test"
 
-  describe "foreign_key/2" do
+  describe "get/2" do
     test_with_mock "returns a organization",
                    HTTPoison,
                    get: &success/2 do
-      assert {:ok, %Organization{}} = Organization.foreign_key(@token, @organization_id)
+      assert {:ok, %Organization{}} = Organization.get(@token, @organization_id)
     end
 
     test_with_mock "returns {:error, %UnauthorizedError{}} if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert {:error, %Iris.Error.UnauthorizedError{}} =
-               Organization.foreign_key(@token, @organization_id)
+               Organization.get(@token, @organization_id)
     end
 
     test_with_mock "returns {:error, %NotFoundError{}} if no id matches",
                    HTTPoison,
                    get: &not_found/2 do
-      assert {:error, %Iris.Error.NotFoundError{}} = Organization.foreign_key(@token, @organization_id)
+      assert {:error, %Iris.Error.NotFoundError{}} = Organization.get(@token, @organization_id)
     end
 
     test_with_mock "returns {:error, %ServerError{}} if rigging doesn't respond",
                    HTTPoison,
                    get: &server_error/2 do
-      assert {:error, %Iris.Error.ServerError{}} = Organization.foreign_key(@token, @organization_id)
+      assert {:error, %Iris.Error.ServerError{}} = Organization.get(@token, @organization_id)
     end
   end
 
-  describe "foreign_key!/2" do
+  describe "get!/2" do
     test_with_mock "returns a organization",
                    HTTPoison,
                    get: &success/2 do
-      assert %Organization{} = Organization.foreign_key!(@token, @organization_id)
+      assert %Organization{} = Organization.get!(@token, @organization_id)
     end
 
     test_with_mock "raises UnauthorizedError if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert_raise Iris.Error.UnauthorizedError, fn ->
-        Organization.foreign_key!(@token, @organization_id)
+        Organization.get!(@token, @organization_id)
       end
     end
 
@@ -54,7 +54,7 @@ defmodule Iris.Rigging.OrganizationTest do
                    HTTPoison,
                    get: &not_found/2 do
       assert_raise Iris.Error.NotFoundError, fn ->
-        Organization.foreign_key!(@token, @organization_id)
+        Organization.get!(@token, @organization_id)
       end
     end
 
@@ -62,7 +62,7 @@ defmodule Iris.Rigging.OrganizationTest do
                    HTTPoison,
                    get: &server_error/2 do
       assert_raise Iris.Error.ServerError, fn ->
-        Organization.foreign_key!(@token, @organization_id)
+        Organization.get!(@token, @organization_id)
       end
     end
   end
