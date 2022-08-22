@@ -120,7 +120,7 @@ defmodule Iris.Rigging.BusinessUnit do
 
       if :error != business_unit,
         do: {:cont, [business_unit | acc]},
-        else: {:halt, []}
+        else: {:halt, :error}
     end)
   end
 
