@@ -19,7 +19,8 @@ defmodule Iris.Rigging.Organization do
     :display_name,
     :auth0_id,
     :responsible_id,
-    :main_business_unit_id
+    :main_business_unit_id,
+    :id
   ]
 
   defstruct @enforce_keys
