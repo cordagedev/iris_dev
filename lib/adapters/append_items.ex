@@ -5,17 +5,17 @@ defmodule Iris.Adapters.AppendItems do
   def from_list(token, list, module, key) when is_valid_input(token, list, module, key) do
     ids = Enum.map(list, &Map.get(&1, key))
 
-    {:ok, items} = module.all(token, ids)
+    with {:ok, items} <- module.all(token, ids) do
+      key_without_sufix =
+        String.slice(Atom.to_string(key), 0..-4)
+        |> String.to_atom()
 
-    key_without_sufix =
-      String.slice(Atom.to_string(key), 0..-4)
-      |> String.to_atom()
-
-    {:ok,
-     for item <- items, entry <- list do
-       Map.put(entry, key_without_sufix, item)
-       |> Map.delete(key)
-     end}
+      {:ok,
+       for item <- items, entry <- list do
+         Map.put(entry, key_without_sufix, item)
+         |> Map.delete(key)
+       end}
+    end
   end
 
   def from_list!(token, list, module, key) when is_valid_input(token, list, module, key) do
