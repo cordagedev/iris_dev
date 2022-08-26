@@ -23,6 +23,7 @@ defmodule Iris.Rigging.Organization do
     :id
   ]
 
+  @derive Jason.Encoder
   defstruct @enforce_keys
 
   @url "/api/v1/organizations/"
