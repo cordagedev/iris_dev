@@ -99,7 +99,6 @@ defmodule Iris.Rigging.User do
   end
 
   def all(user_token, ids) when is_list(ids) do
-    IO.inspect(ids)
     ids
     |> Enum.map(&Task.async(fn -> get(user_token, &1) end))
     |> Task.await_many(3000) # timeout
