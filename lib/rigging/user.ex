@@ -20,6 +20,7 @@ defmodule Iris.Rigging.User do
 
   import Iris.Response
   import Iris.Request
+  import Iris.Formatter
 
   @enforce_keys ~w[
     id
@@ -96,6 +97,16 @@ defmodule Iris.Rigging.User do
   def get!(user_token, id) when is_binary(id) do
     return!(get(user_token, id))
   end
+
+  def all(user_token, ids) when is_list(ids) do
+    ids
+    |> Enum.map(&Task.async(fn -> get(user_token, &1) end))
+    |> Task.await_many(3000) # timeout
+    |> format_list()
+    |> return()
+  end
+
+  def all!(user_token, ids) when is_list(ids), do: return!(all(user_token, ids))
 
   defp parse({:error, error}), do: {:error, error}
 
