@@ -38,6 +38,7 @@ defmodule Iris.Rigging.User do
     :job_title_id
   ]
 
+  @derive Jason.Encoder
   defstruct @enforce_keys
 
   @url "/api/v1/users/"
