@@ -22,21 +22,21 @@ defmodule Iris.Rigging.User do
   import Iris.Request
   import Iris.Formatter
 
-  @enforce_keys ~w[
-    id
-    first_name
-    middle_name
-    last_name
-    email
-    timezone
-    auth0_id
-    type
-    status
-    language
-    organization_id
-    organizational_unit_id
-    job_title_id
-  ]a
+  @enforce_keys [
+    :id,
+    :first_name,
+    :middle_name,
+    :last_name,
+    :email,
+    :timezone,
+    :auth0_id,
+    :type,
+    :status,
+    :language,
+    :organization_id,
+    :organizational_unit_id,
+    :job_title_id
+  ]
 
   defstruct @enforce_keys
 
