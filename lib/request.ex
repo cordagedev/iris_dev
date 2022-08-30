@@ -2,7 +2,9 @@ defmodule Iris.Request do
   def request(:rigging, url, token), do: make_request("#{rigging_url()}#{url}", token)
 
   defp make_request(url, token) do
-    case HTTPoison.get(url, %{"Authorization" => "Bearer " <> token}) do
+    token = "Bearer #{token}"
+    IO.inspect(token)
+    case HTTPoison.get(url, %{"Authorization" => token}) do
       {:error, _error} ->
         {:error, %Iris.Error.ServerError{}}
 
