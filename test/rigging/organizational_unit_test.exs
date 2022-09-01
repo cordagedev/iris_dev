@@ -86,6 +86,65 @@ defmodule OrganizationalUnitTest do
     end
   end
 
+  describe "all/2" do
+    test_with_mock "returns a organizational unit",
+                   HTTPoison,
+                   get: &success/2 do
+      assert is_list(OrganizationalUnit.all(@token, [@organizational_unit_id]))
+    end
+
+    test_with_mock "returns {:error, %UnauthorizedError{}} if token is invalid",
+                   HTTPoison,
+                   get: &unauthorized/2 do
+      assert :error =
+               OrganizationalUnit.all(@token, [@organizational_unit_id])
+    end
+
+    test_with_mock "returns {:error, %NotFoundError{}} if no id matches",
+                   HTTPoison,
+                   get: &not_found/2 do
+      assert :error = OrganizationalUnit.all(@token, [@organizational_unit_id])
+    end
+
+    test_with_mock "returns {:error, %ServerError{}} if rigging doesn't respond",
+                   HTTPoison,
+                   get: &server_error/2 do
+      assert :error = OrganizationalUnit.all(@token, [@organizational_unit_id])
+    end
+  end
+
+  describe "all!/2" do
+    test_with_mock "returns a organizational unit",
+                   HTTPoison,
+                   get: &success/2 do
+      assert is_list(OrganizationalUnit.all!(@token, [@organizational_unit_id]))
+    end
+
+    test_with_mock "raises UnauthorizedError if token is invalid",
+                   HTTPoison,
+                   get: &unauthorized/2 do
+      assert_raise Iris.Error.UnauthorizedError, fn ->
+        OrganizationalUnit.all!(@token, [@organizational_unit_id])
+      end
+    end
+
+    test_with_mock "raises NotFoundError if no id matches",
+                   HTTPoison,
+                   get: &not_found/2 do
+      assert_raise Iris.Error.NotFoundError, fn ->
+        OrganizationalUnit.all!(@token, [@organizational_unit_id])
+      end
+    end
+
+    test_with_mock "raises a ServerError if rigging doesn't respond",
+                   HTTPoison,
+                   get: &server_error/2 do
+      assert_raise Iris.Error.ServerError, fn ->
+        OrganizationalUnit.all!(@token, [@organizational_unit_id])
+      end
+    end
+  end
+
   defp success(_url, _headers) do
     {:ok,
      %HTTPoison.Response{
