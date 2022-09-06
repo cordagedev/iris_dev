@@ -19,6 +19,7 @@ defmodule Iris.Rigging.BusinessUnit do
   import Iris.Request
 
   @enforce_keys [
+    :id,
     :active,
     :name,
     :code,
