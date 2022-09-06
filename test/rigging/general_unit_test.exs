@@ -1,54 +1,54 @@
-defmodule OrganizationalUnitTest do
+defmodule GeneralUnitTest do
   use ExUnit.Case, async: false
 
   import Mock
 
-  alias Iris.Rigging.OrganizationalUnit
+  alias Iris.Rigging.GeneralUnit
 
-  @organizational_unit_id "eff17a61-9e42-4fa4-8a9a-48f7b5227759"
+  @general_unit_id "eff17a61-9e42-4fa4-8a9a-48f7b5227759"
   @token "test"
 
   describe "get/2" do
-    test_with_mock "returns an organizational unit",
+    test_with_mock "returns an general unit",
                    HTTPoison,
                    get: &success/2 do
-      assert {:ok, %OrganizationalUnit{}} = OrganizationalUnit.get(@token, @organizational_unit_id)
+      assert {:ok, %GeneralUnit{}} = GeneralUnit.get(@token, @general_unit_id)
     end
 
     test_with_mock "returns {:error, %UnauthorizedError{}} if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert {:error, %Iris.Error.UnauthorizedError{}} =
-               OrganizationalUnit.get(@token, @organizational_unit_id)
+               GeneralUnit.get(@token, @general_unit_id)
     end
 
     test_with_mock "returns {:error, %NotFoundError{}} if no id matches",
                    HTTPoison,
                    get: &not_found/2 do
       assert {:error, %Iris.Error.NotFoundError{}} =
-               OrganizationalUnit.get(@token, @organizational_unit_id)
+               GeneralUnit.get(@token, @general_unit_id)
     end
 
     test_with_mock "returns {:error, %ServerError{}} if rigging doesn't respond",
                    HTTPoison,
                    get: &server_error/2 do
       assert {:error, %Iris.Error.ServerError{}} =
-               OrganizationalUnit.get(@token, @organizational_unit_id)
+               GeneralUnit.get(@token, @general_unit_id)
     end
   end
 
   describe "get!/2" do
-    test_with_mock "returns an organizational unit",
+    test_with_mock "returns an general unit",
                    HTTPoison,
                    get: &success/2 do
-      assert %OrganizationalUnit{} = OrganizationalUnit.get!(@token, @organizational_unit_id)
+      assert %GeneralUnit{} = GeneralUnit.get!(@token, @general_unit_id)
     end
 
     test_with_mock "raises UnauthorizedError if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert_raise Iris.Error.UnauthorizedError, fn ->
-        OrganizationalUnit.get!(@token, @organizational_unit_id)
+        GeneralUnit.get!(@token, @general_unit_id)
       end
     end
 
@@ -56,7 +56,7 @@ defmodule OrganizationalUnitTest do
                    HTTPoison,
                    get: &not_found/2 do
       assert_raise Iris.Error.NotFoundError, fn ->
-        OrganizationalUnit.get!(@token, @organizational_unit_id)
+        GeneralUnit.get!(@token, @general_unit_id)
       end
     end
 
@@ -64,50 +64,50 @@ defmodule OrganizationalUnitTest do
                    HTTPoison,
                    get: &server_error/2 do
       assert_raise Iris.Error.ServerError, fn ->
-        OrganizationalUnit.get!(@token, @organizational_unit_id)
+        GeneralUnit.get!(@token, @general_unit_id)
       end
     end
   end
 
   describe "all/2" do
-    test_with_mock "returns a organizational unit",
+    test_with_mock "returns a general unit",
                    HTTPoison,
                    get: &success/2 do
-      assert is_list(OrganizationalUnit.all(@token, [@organizational_unit_id]))
+      assert is_list(GeneralUnit.all(@token, [@general_unit_id]))
     end
 
     test_with_mock "returns {:error, %UnauthorizedError{}} if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert :error =
-               OrganizationalUnit.all(@token, [@organizational_unit_id])
+               GeneralUnit.all(@token, [@general_unit_id])
     end
 
     test_with_mock "returns {:error, %NotFoundError{}} if no id matches",
                    HTTPoison,
                    get: &not_found/2 do
-      assert :error = OrganizationalUnit.all(@token, [@organizational_unit_id])
+      assert :error = GeneralUnit.all(@token, [@general_unit_id])
     end
 
     test_with_mock "returns {:error, %ServerError{}} if rigging doesn't respond",
                    HTTPoison,
                    get: &server_error/2 do
-      assert :error = OrganizationalUnit.all(@token, [@organizational_unit_id])
+      assert :error = GeneralUnit.all(@token, [@general_unit_id])
     end
   end
 
   describe "all!/2" do
-    test_with_mock "returns a organizational unit",
+    test_with_mock "returns a general unit",
                    HTTPoison,
                    get: &success/2 do
-      assert is_list(OrganizationalUnit.all!(@token, [@organizational_unit_id]))
+      assert is_list(GeneralUnit.all!(@token, [@general_unit_id]))
     end
 
     test_with_mock "raises UnauthorizedError if token is invalid",
                    HTTPoison,
                    get: &unauthorized/2 do
       assert_raise Iris.Error.UnauthorizedError, fn ->
-        OrganizationalUnit.all!(@token, [@organizational_unit_id])
+        GeneralUnit.all!(@token, [@general_unit_id])
       end
     end
 
@@ -115,7 +115,7 @@ defmodule OrganizationalUnitTest do
                    HTTPoison,
                    get: &not_found/2 do
       assert_raise Iris.Error.NotFoundError, fn ->
-        OrganizationalUnit.all!(@token, [@organizational_unit_id])
+        GeneralUnit.all!(@token, [@general_unit_id])
       end
     end
 
@@ -123,7 +123,7 @@ defmodule OrganizationalUnitTest do
                    HTTPoison,
                    get: &server_error/2 do
       assert_raise Iris.Error.ServerError, fn ->
-        OrganizationalUnit.all!(@token, [@organizational_unit_id])
+        GeneralUnit.all!(@token, [@general_unit_id])
       end
     end
   end
@@ -134,12 +134,10 @@ defmodule OrganizationalUnitTest do
        status_code: 200,
        body: """
        {
-         "id": "#{@organizational_unit_id}",
+         "id": "#{@general_unit_id}",
          "name": "test",
          "code": "TEST12",
-         "level": 1,
          "description": "description :)",
-         "type_of_access": "public",
          "organization_id": "eff17a61-9e42-4fa4-8a9a-48f7b5227751",
          "responsible_id": "eff17a61-9e42-4fa4-8a9a-48f7b5227752"
        }
