@@ -7,7 +7,8 @@ defmodule Iris.MixProject do
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: package()
     ]
   end
 
@@ -23,7 +24,21 @@ defmodule Iris.MixProject do
     [
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.3"},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0", only: :test},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+    ]
+  end
+
+  defp package do
+    [
+      name: "iris_test",
+      description: "Iris is the library that provides http request interface",
+      organization: "hexpm",
+      licenses: ["MPL-2.0"],
+      links: %{
+        "Changelog" => "https://hexdocs.pm/iris_test/changelog.html"
+      },
+      files: ~w(lib mix.exs .formatter.exs README.md config)
     ]
   end
 end
